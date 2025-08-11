@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCartStore } from "@/lib/store/cart";
 
 type ProductDetailProps = {
   id: number;
@@ -31,6 +32,8 @@ const ProductDetail = ({
   const originalPrice = Math.round(price * 1.25);
   const photos = [imageUri, ...morePhotos];
 
+  const { addItem, items } = useCartStore();
+
   const [selectedImage, setSelectedImage] = useState(imageUri);
 
   const priceFmt = (v: number) =>
@@ -39,6 +42,19 @@ const ProductDetail = ({
       currency: "USD",
       minimumFractionDigits: 0,
     }).format(v);
+
+  const addToCart = () => {
+    const currentUnit =
+      items.find((item) => item.id === id && item.imageUri === selectedImage)
+        ?.unit ?? 0;
+    addItem({
+      id,
+      title,
+      price,
+      imageUri: selectedImage,
+      unit: currentUnit + 1,
+    });
+  };
 
   return (
     <div className="pb-28">
@@ -198,7 +214,7 @@ const ProductDetail = ({
             <div className="text-2xl font-medium text-[#375737]">
               {priceFmt(salePrice)}
             </div>
-            <Button className="bg-[#748067] hover:bg-[#286f2c] text-white">
+            <Button className="bg-[#748067] hover:bg-[#286f2c] text-white cursor-pointer" onClick={addToCart}>
               Add to Cart
               <ChevronRight className="size-4" />
             </Button>
