@@ -5,8 +5,11 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/lib/store/cart";
 import { useCatalogStore } from "@/lib/store/catalog";
+import { useRouter } from "next/navigation";
 
 const SearchBar = () => {
+  const router = useRouter();
+
   const { items } = useCartStore();
   const { setQuery } = useCatalogStore();
 
@@ -32,17 +35,18 @@ const SearchBar = () => {
       >
         Filters
       </Button>
-    <Button
-      className={`min-w-28 px-2.5 font-medium border-0 cursor-pointer text-sm font-sans ${
-        items.length > 0
-        ? "bg-[#375737] text-white"
-        : "bg-[#F0F0F0] text-[#5F5F5F]"
-      }`}
-      type="button"
-      variant="outline"
-    >
-      Your Cart
-    </Button>
+      <Button
+        className={`min-w-28 px-2.5 font-medium border-0 cursor-pointer text-sm font-sans ${
+          items.length > 0
+            ? "bg-[#375737] text-white"
+            : "bg-[#F0F0F0] text-[#5F5F5F]"
+        }`}
+        type="button"
+        variant="outline"
+        onClick={() => router.push("/cart")}
+      >
+        Your Cart
+      </Button>
     </div>
   );
 };

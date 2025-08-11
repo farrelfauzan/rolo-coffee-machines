@@ -7,6 +7,7 @@ interface CartItem {
   title: string;
   unit: number;
   price: number;
+  type: string;
 }
 
 interface CartState {

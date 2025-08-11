@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
+import Footer from "./footer";
+import { priceFmt } from "@/lib/utils";
 
 type ProductDetailProps = {
   id: number;
@@ -32,29 +34,7 @@ const ProductDetail = ({
   const originalPrice = Math.round(price * 1.25);
   const photos = [imageUri, ...morePhotos];
 
-  const { addItem, items } = useCartStore();
-
   const [selectedImage, setSelectedImage] = useState(imageUri);
-
-  const priceFmt = (v: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-    }).format(v);
-
-  const addToCart = () => {
-    const currentUnit =
-      items.find((item) => item.id === id && item.imageUri === selectedImage)
-        ?.unit ?? 0;
-    addItem({
-      id,
-      title,
-      price,
-      imageUri: selectedImage,
-      unit: currentUnit + 1,
-    });
-  };
 
   return (
     <div className="pb-28">
@@ -200,7 +180,14 @@ const ProductDetail = ({
       </div>
 
       {/* Bottom action bar */}
-      <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <Footer
+        salePrice={salePrice}
+        id={id}
+        title={title}
+        price={price}
+        selectedImage={selectedImage}
+      />
+      {/* <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex items-center justify-between gap-4 p-6">
           <Link href="../" className="flex items-center gap-2 text-[#475069]">
             <Button
@@ -220,7 +207,7 @@ const ProductDetail = ({
             </Button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
