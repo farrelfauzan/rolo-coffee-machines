@@ -59,28 +59,40 @@ const CustomerForm = () => {
     setFormValid(isFormValid);
   }, [isFormValid, setFormValid]);
 
-  const onSubmit = useCallback(async (values: z.infer<typeof customerSchema>) => {
-    setIsLoading(true);
-    const payload = {
+const onSubmit = useCallback(async (values: z.infer<typeof customerSchema>) => {
+  setIsLoading(true);
+
+  try {
+    // Optionally: save customer data first
+    await createCustomer({
       ...values,
       items,
       total,
-    };
+    });
 
-    await createCustomer(payload)
-      .then((response) => {
-        console.log("Customer created successfully:", response);
-        setIsLoading(false);
-        router.push("/payment");
-      })
-      .catch((error) => {
-        console.error("Error creating customer:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-        form.reset();
-      });
-  }, []);
+    // Then create Stripe checkout session
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }), // just cart items for now
+    });
+
+    const { url } = await res.json();
+
+    if (url) {
+      // Redirect to Stripe Checkout UI (PayNow included)
+      window.location.href = url;
+    } else {
+      console.error('No checkout URL returned from server');
+    }
+  } catch (error) {
+    console.error('Error during checkout:', error);
+  } finally {
+    setIsLoading(false);
+    form.reset();
+  }
+}, [items, total, form, setIsLoading]);
+
 
   const onError = useCallback((errors: any) => {
     console.log("Form validation errors:", errors);
