@@ -3,9 +3,6 @@ import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCartStore } from "@/lib/store/cart";
 import Footer from "./footer";
 import { priceFmt } from "@/lib/utils";
 

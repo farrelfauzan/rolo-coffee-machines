@@ -12,16 +12,19 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import z from "zod";
+import z, { set } from "zod";
 import { Input } from "../ui/input";
 import { useFormStore } from "@/lib/store/form";
 import { useEffect, useCallback, useMemo } from "react";
 import Footer from "./footer";
 import { useCartStore } from "@/lib/store/cart";
 import { createCustomer } from "@/server/customer";
+import { useRouter } from "next/navigation";
 
 const CustomerForm = () => {
-  const { setSubmitForm, setFormValid } = useFormStore();
+  const router = useRouter()
+
+  const { setSubmitForm, setFormValid, setIsLoading } = useFormStore();
   const { total, items } = useCartStore();
 
   const form = useForm({
@@ -56,25 +59,26 @@ const CustomerForm = () => {
     setFormValid(isFormValid);
   }, [isFormValid, setFormValid]);
 
-  const onSubmit = useCallback((values: z.infer<typeof customerSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log("Form submitted with values:", values);
+  const onSubmit = useCallback(async (values: z.infer<typeof customerSchema>) => {
+    setIsLoading(true);
     const payload = {
       ...values,
       items,
       total,
     };
 
-    console.log("Payload to be sent:", payload);
-
-    // Call the API to create the customer
-    createCustomer(payload)
+    await createCustomer(payload)
       .then((response) => {
         console.log("Customer created successfully:", response);
+        setIsLoading(false);
+        router.push("/payment");
       })
       .catch((error) => {
         console.error("Error creating customer:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+        form.reset();
       });
   }, []);
 

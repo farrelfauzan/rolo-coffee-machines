@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/client/header";
+import ConditionalLayout from "@/components/client/conditional-layout";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -23,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <Header />
-        <main className="container mx-auto p-4 font-sans">{children}</main>
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );
