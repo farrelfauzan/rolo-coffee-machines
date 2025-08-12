@@ -18,11 +18,12 @@ import { useFormStore } from "@/lib/store/form";
 import { useEffect, useCallback, useMemo } from "react";
 import Footer from "./footer";
 import { useCartStore } from "@/lib/store/cart";
+import { createCustomer } from "@/server/customer";
 
 const CustomerForm = () => {
   const { setSubmitForm, setFormValid } = useFormStore();
-  const {total} = useCartStore()
-  
+  const { total, items } = useCartStore();
+
   const form = useForm({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -32,21 +33,21 @@ const CustomerForm = () => {
       unit: "",
       code: "",
     },
-    mode: "onChange", // This will validate on every change
+    mode: "onChange",
   });
-  
+
   const name = form.watch("name");
   const email = form.watch("email");
   const address = form.watch("address");
   const code = form.watch("code");
 
   const isFormValid = useMemo(() => {
-    const hasRequiredFields = 
-      name?.trim() !== "" && 
-      email?.trim() !== "" && 
-      address?.trim() !== "" && 
+    const hasRequiredFields =
+      name?.trim() !== "" &&
+      email?.trim() !== "" &&
+      address?.trim() !== "" &&
       code?.trim() !== "";
-    
+
     const hasNoErrors = Object.keys(form.formState.errors).length === 0;
     return hasRequiredFields && hasNoErrors;
   }, [name, email, address, code, form.formState.errors]);
@@ -59,13 +60,28 @@ const CustomerForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log("Form submitted with values:", values);
+    const payload = {
+      ...values,
+      items,
+      total,
+    };
+
+    console.log("Payload to be sent:", payload);
+
+    // Call the API to create the customer
+    createCustomer(payload)
+      .then((response) => {
+        console.log("Customer created successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error creating customer:", error);
+      });
   }, []);
 
   const onError = useCallback((errors: any) => {
     console.log("Form validation errors:", errors);
   }, []);
 
-  // Register the submit function with the store
   useEffect(() => {
     const submitHandler = () => {
       console.log("About to trigger form submission...");
@@ -165,7 +181,7 @@ const CustomerForm = () => {
               name="code"
               render={({ field }) => (
                 <FormItem className="mt-1">
-                  <FormLabel>Unit</FormLabel>
+                  <FormLabel>Code</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -179,9 +195,7 @@ const CustomerForm = () => {
           </div>
         </form>
       </div>
-      <Footer 
-        totalPrice={total}
-      />
+      <Footer totalPrice={total} />
     </Form>
   );
 };
