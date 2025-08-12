@@ -22,10 +22,9 @@ import { createCustomer } from "@/server/customer";
 import { useRouter } from "next/navigation";
 
 const CustomerForm = () => {
-  const router = useRouter()
 
   const { setSubmitForm, setFormValid, setIsLoading } = useFormStore();
-  const { total, items } = useCartStore();
+  const { total, items, clearCart } = useCartStore();
 
   const form = useForm({
     resolver: zodResolver(customerSchema),
@@ -90,6 +89,7 @@ const onSubmit = useCallback(async (values: z.infer<typeof customerSchema>) => {
   } finally {
     setIsLoading(false);
     form.reset();
+    clearCart();
   }
 }, [items, total, form, setIsLoading]);
 
