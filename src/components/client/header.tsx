@@ -10,7 +10,7 @@ const Header = () => {
 
   console.log("Current Pathname:", pathname);
 
-  if (pathname === "/cart") {
+  if (pathname === "/cart" || pathname === "/customer-detail") {
     return null;
   }
 

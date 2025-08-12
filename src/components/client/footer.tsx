@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 import { priceFmt } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { useFormStore } from "@/lib/store/form";
 
 type IFooterProps = {
   id?: number;
@@ -23,6 +25,9 @@ const Footer = ({
   salePrice,
   totalPrice,
 }: IFooterProps) => {
+  const pathName = usePathname();
+  const { triggerSubmit, isFormValid } = useFormStore();
+
   const { addItem, items } = useCartStore();
 
   const addToCart = () => {
@@ -75,10 +80,23 @@ const Footer = ({
               <div className="text-2xl font-medium text-[#375737]">
                 Total {priceFmt(totalPrice ?? 0)}
               </div>
-              <Button className="bg-[#748067] hover:bg-[#286f2c] text-white cursor-pointer">
-                Check Out
-                <ChevronRight className="size-4" />
-              </Button>
+              {pathName === "/customer-detail" ? (
+                <Button 
+                  className="bg-[#748067] hover:bg-[#286f2c] text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={triggerSubmit}
+                  disabled={!isFormValid}
+                >
+                  Make Payment
+                  <ChevronRight className="size-4" />
+                </Button>
+              ) : (
+                <Link href="/customer-detail">
+                  <Button className="bg-[#748067] hover:bg-[#286f2c] text-white cursor-pointer">
+                    Check Out
+                    <ChevronRight className="size-4" />
+                  </Button>
+                </Link>
+              )}
             </>
           )}
         </div>
