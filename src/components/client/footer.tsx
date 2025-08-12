@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 import { priceFmt } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useFormStore } from "@/lib/store/form";
 
 type IFooterProps = {
@@ -25,7 +25,9 @@ const Footer = ({
   salePrice,
   totalPrice,
 }: IFooterProps) => {
+  const router = useRouter();
   const pathName = usePathname();
+
   const { triggerSubmit, isFormValid } = useFormStore();
 
   const { addItem, items } = useCartStore();
@@ -52,14 +54,13 @@ const Footer = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex items-center justify-between gap-4 p-6">
-        <Link href="../" className="flex items-center gap-2 text-[#475069]">
           <Button
             variant="outline"
             className="gap-2 bg-[#F0F0F0] border-none shadow-none"
+            onClick={() => router.back()}
           >
             <ChevronLeft className="size-4" /> Back
           </Button>
-        </Link>
         <div className="ml-auto flex items-center gap-4">
           {salePrice ? (
             <>

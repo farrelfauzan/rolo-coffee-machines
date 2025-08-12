@@ -3,7 +3,7 @@
 import { useCartStore } from "@/lib/store/cart";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { Trash2, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
 import Footer from "./footer";

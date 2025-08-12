@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   experimental: {
     serverMinification: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

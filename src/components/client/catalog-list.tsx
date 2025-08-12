@@ -2,7 +2,7 @@
 
 import { useCatalogStore } from "@/lib/store/catalog";
 import CatalogCard from "../server/catalogue";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { catalogItems } from "@/data";
 
 type Props = {
