@@ -178,7 +178,7 @@ const onSubmit = useCallback(async (values: z.infer<typeof customerSchema>) => {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex flex-row justify-between">
-                    <FormLabel>Unit</FormLabel>
+                    <FormLabel>Unit / House Number</FormLabel>
                     <FormDescription>Optional</FormDescription>
                   </div>
                   <FormControl>

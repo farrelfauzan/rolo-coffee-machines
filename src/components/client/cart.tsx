@@ -9,7 +9,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import Footer from "./footer";
 
 const CartList = () => {
-  const { items, total, removeItem } = useCartStore();
+  const { items, total } = useCartStore();
 
   const priceFmt = (v: number) =>
     new Intl.NumberFormat("en-US", {
@@ -68,7 +68,7 @@ const CartList = () => {
       {/* Cart Items */}
       <ScrollArea className="space-y-6 h-[calc(100vh-40rem)] px-8">
         {groupedItems.map((item, index) => (
-          <div key={index + 1} className="flex items-center gap-6 py-6 border-b border-gray-100">
+          <div key={index + 1} className="flex items-center gap-6 py-6 border-b-[1px] border-[#BABFCE] ">
             {/* Product Image */}
             <div className="w-20 h-20 flex-shrink-0">
               <Image
@@ -90,7 +90,7 @@ const CartList = () => {
             
             {/* Price and Quantity */}
             <div className="text-right flex-1">
-              <div className="font-semibold text-[#1C1C1E] mb-1">
+              <div className="font-medium text-[#1C1C1E] mb-1 text-[16px]">
                 {priceFmt(item.totalPrice)}
               </div>
               <div className="text-[#8E93A7] text-sm">{item.quantity} unit{item.quantity > 1 ? 's' : ''}</div>
